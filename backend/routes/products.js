@@ -1,6 +1,7 @@
 var express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const authorization = require('../config/authoriza');
 
 //models
 var Schema = require('mongoose').Schema
@@ -63,9 +64,24 @@ const getProduct = () => {
   })
 }
 
+const getDevice = (type) =>{
+  return new Promise((resolve, reject) => {
+      Product.find({type: type}, (err,data) => {
+          if(err){
+              reject(new Error('Cannot find Product'))
+          }else{
+              if(data.length > 0){
+                  resolve(data)
+              }else{
+                  reject(new Error('No '+type))
+              }
+          }
+      })
+  })
+}
 
 router.route('/products/add')
-    .post((req, res) => {
+    .post(authorization, (req, res) => {
       console.log('add');
       addProduct(req.body)
         .then(result => {
@@ -141,5 +157,20 @@ router.delete("/product/delete/:product_id", function(req, res) {
       res.status(500).send(`Error details: ${err.message}`);
     });
 });
+
+router.route('/products/getproduct/:type')
+.get((req, res) => {
+    console.log(req.params.type)
+    const type = req.params.type
+    getDevice(type)
+    .then(result => {
+          console.log(result)
+          res.status(200).send(result)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(400).json('No '+ type)
+    })
+})
 
 module.exports = router

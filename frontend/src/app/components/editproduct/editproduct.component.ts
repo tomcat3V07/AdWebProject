@@ -10,6 +10,7 @@ import { LocalStorageService } from 'angular-web-storage';
 })
 export class EditproductComponent implements OnInit {
 
+  currentProduct:any;
   products:any;
   token:any;
 
@@ -62,12 +63,11 @@ export class EditproductComponent implements OnInit {
     window.location.reload();
   }
 
-  updateProducts(){
-    this.productForm.get('id')?.setValue(this.products[0].id)
-    this.productForm.get('name')?.setValue(this.products[0].name)
-    this.productForm.get('detail')?.setValue(this.products[0].detail)
-    this.productForm.get('quantity')?.setValue(this.products[0].quantity)
-    this.productForm.get('price')?.setValue(this.products[0].price)
+  updateProducts(id:number){
+    this.productForm.setValue(this.products[id].name)
+    this.productForm.setValue(this.products[id].detail)
+    this.productForm.setValue(this.products[id].quantity)
+    this.productForm.setValue(this.products[id].price)
 
     console.log(this.productForm.value)
   }
@@ -76,9 +76,9 @@ export class EditproductComponent implements OnInit {
     console.log(this.productForm.value)
     try {
       this.token = this.local.get('user').token
-      this.ps.updateProduct(this.token,this.productForm.value).subscribe(
+      this.ps.updateProduct(this.token, this.productForm.value).subscribe(
         data => {
-         
+         this.products = data;
         },err => {
           console.log(err)
         });
@@ -88,5 +88,25 @@ export class EditproductComponent implements OnInit {
     window.location.reload();
   }
 
+  editProduct(productID: any){
+    console.log(productID);
+    //console.log(product);
+    console.log(this.productForm.value);
+    //this.product = productForm.id
+    this.ps.updateProduct(productID,this.productForm.value).subscribe(
+      data => {
+        console.log(data);
+        alert('Product updated successfully')
+        this.productForm.reset()
+      },
+      err =>{
+        console.log(err);
+      })
+      window.location.reload();
+  }
+
+  iClick(item:any) {
+    this.currentProduct = item;
+  }
 
 }

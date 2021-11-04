@@ -24,7 +24,7 @@ import { MenuComponent } from './components/menu/menu.component';
     SigninComponent,
     SignupComponent,
     EditproductComponent,
-    MenuComponent
+    MenuComponent,
   ],
   imports: [
     BrowserModule,

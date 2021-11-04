@@ -13,7 +13,7 @@ export class ProductsService {
 
   addProduct(product: any, token: any){
     const headers = {'Authorization': token}
-    return this.http.post<any>('http://localhost:3000/api/add', product, {headers})
+    return this.http.post<any>('http://localhost:3000/api/products/add', product, {headers})
     .pipe(map(data => {
       return data
     }))
@@ -48,6 +48,7 @@ export class ProductsService {
     return this.http.delete<any>('http://localhost:3000/carts/deletefromcart/'+customerid+'/'+productID,{headers})
   }
 
+  
   updateProduct(productID: String,product: any){
     console.log(product);
 
@@ -55,5 +56,17 @@ export class ProductsService {
     .pipe(map(data => {
       return data
     }))
+  }
+
+  getproductbytype(token: any, type: any){
+    const headers = {'Authorization': token}
+    return this.http.get<any>('http://localhost:3000/api/products/getproduct/'+type,{headers})
+    .pipe(map(data => {
+      if (data) {
+      
+        console.log(data);
+      }
+      return data;
+    }));
   }
 }
